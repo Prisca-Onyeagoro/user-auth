@@ -1,0 +1,6 @@
+.icon {
+  @apply text-gray-500;
+}
+.icon:hover {
+  @apply text-gray-900;
+}
