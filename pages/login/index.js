@@ -9,15 +9,15 @@ import {
 import Styles from '@/styles/register.module.css';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import { validateRegister } from '@/validate/validate';
+import { validateLogin } from '@/validate/validate';
 const Login = () => {
-  const [show, setShow] = useState({ password: false, cpassword: false });
+  const [show, setShow] = useState({ password: false });
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
-    validate: validateRegister,
+    validate: validateLogin,
     onSubmit,
   });
   async function onSubmit(values) {
