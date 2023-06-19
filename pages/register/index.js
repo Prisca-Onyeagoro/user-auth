@@ -7,12 +7,21 @@ import {
   HiThumbUp,
 } from 'react-icons/hi';
 import Styles from '@/styles/register.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { validateRegister } from '@/validate/validate';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
+
+export const metadata = {
+  title: 'Register Page',
+  description: 'Tutorial on next-auth',
+};
+
 const Regsiter = () => {
-  const [icon, showIcon] = useState(false);
   const [show, setShow] = useState({ password: false, cpassword: false });
+  const [Loading, isLoading] = useState(false);
+  const Router = useRouter();
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -23,18 +32,61 @@ const Regsiter = () => {
     validate: validateRegister,
     onSubmit,
   });
+  // submit users details to the backend to be stored in a database
   async function onSubmit(values) {
-    console.log(values);
+    const Options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values),
+    };
+
+    try {
+      // making a post request to the middleware handler /api/middleware/HttpHandler
+      const res = await fetch(
+        'http://localhost:3000/api/middleware/HttpHandler',
+        Options
+      );
+      if (res.ok) {
+        console.log('good');
+        console.log(res);
+      } else {
+        console.log('ERROR');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+  useEffect(() => {
+    const HandleChangeStart = () => {
+      isLoading(true);
+    };
+
+    const HandleChangeEnd = () => {
+      isLoading(false);
+    };
+    Router.events.on('routeChangeStart', HandleChangeStart);
+    Router.events.on('routeChangeComplete', HandleChangeEnd);
+
+    return () => {
+      Router.events.off('routeChangeStart', HandleChangeStart);
+      Router.events.off('routeChangeComplete', HandleChangeEnd);
+    };
+  });
 
   return (
     <div className="bg-gray-950 w-full relative p-14 flex bottom-14 justify-center ">
       <div className="bg-slate-300 border-l-8 border-gray-800 border-t-8 ">
         <div className="text-4xl font-bold text-center mt-6">
-          <div className="text-4xl font-bold flex justify-center">
-            Regsiter <HiUsers />
-          </div>
+          <div className="text-4xl font-bold flex justify-center">Regsiter</div>
         </div>
+        {Loading && (
+          <Image
+            src="/assets/loading.svg"
+            alt="loading"
+            width={90}
+            height={100}
+          />
+        )}
         <div className="flex justify-center">
           <p>
             {' '}

@@ -7,10 +7,14 @@ import {
   HiThumbUp,
 } from 'react-icons/hi';
 import Styles from '@/styles/register.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { validateLogin } from '@/validate/validate';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 const Login = () => {
+  const Router = useRouter();
+  const [loading, isloading] = useState(false);
   const [show, setShow] = useState({ password: false });
   const formik = useFormik({
     initialValues: {
@@ -24,11 +28,27 @@ const Login = () => {
     console.log(values);
   }
 
+  useEffect(() => {
+    const HandleChangeStart = () => {
+      isloading(true);
+    };
+
+    const HandleChangeEnd = () => {
+      isloading(false);
+    };
+    Router.events.on('routeChangeStart', HandleChangeStart);
+    Router.events.on('routeChangeComplete', HandleChangeEnd);
+
+    return () => {
+      Router.events.off('routeChangeStart', HandleChangeStart);
+      Router.events.off('routeChangeComplete', HandleChangeEnd);
+    };
+  });
   return (
     <div className="bg-gray-950 w-full h-screen relative p-14 flex  justify-center ">
       <div className="bg-slate-300 border-l-8 border-gray-800 border-t-8 ">
         <div className="text-4xl font-bold text-center mt-6">
-          <div className="text-4xl font-bold flex justify-center">
+          <div className="text-4xl  font-bold flex justify-center">
             LogIn <HiUsers />
           </div>
         </div>
@@ -38,7 +58,14 @@ const Login = () => {
             Dont have an account ? <Link href="/register">Sigin Up</Link>
           </p>
         </div>
-
+        {loading && (
+          <Image
+            src="/assets/loading.svg"
+            alt="loading"
+            width={90}
+            height={100}
+          />
+        )}
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4 p-14 ">
             {/* email */}

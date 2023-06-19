@@ -6,8 +6,8 @@ const baseconn = async () => {
 
     if (connection.readyState === 1) {
       Promise.resolve(true);
+      console.log('database successfully connected');
     }
-    console.log('database successfully connected');
   } catch (error) {
     Promise.reject(false);
   }

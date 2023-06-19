@@ -9,13 +9,13 @@ const HttpHandler = async (req, res) => {
   if (req.method === 'POST') {
     if (!req.body)
       return res
-        .status(404)
+        .status(400)
         .json({ message: 'Missing Field, Kindly fill them up' });
     const { name, email, password } = req.body;
     // check if user exits
     const userexits = await Users.findOne({ email });
     if (userexits)
-      return res.status(404).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'User already exists' });
 
     //   store the user in  the database
     const createuser = await Users.create({
