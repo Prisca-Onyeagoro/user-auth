@@ -12,6 +12,7 @@ import { useFormik } from 'formik';
 import { validateLogin } from '@/validate/validate';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { signIn } from 'next-auth/react';
 const Login = () => {
   const Router = useRouter();
   const [loading, isloading] = useState(false);
@@ -25,7 +26,27 @@ const Login = () => {
     onSubmit,
   });
   async function onSubmit(values) {
-    console.log(values);
+    const status = await signIn('credentials', {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+      callbackUrl: '/',
+    });
+
+    // if user login is successfull
+    if (status.error !== null) {
+      const ErrorMessage = status.error;
+      DisplayErrorMessage(ErrorMessage);
+    }
+    // checking if the user encoutered an error while logging in
+    if (status.ok) {
+      Router.push(status.url);
+    }
+  }
+
+  function DisplayErrorMessage(ErrorMessage) {
+    const error = document.getElementById('error');
+    error.textContent = ErrorMessage;
   }
 
   useEffect(() => {
@@ -58,6 +79,10 @@ const Login = () => {
             Dont have an account ? <Link href="/register">Sigin Up</Link>
           </p>
         </div>
+        <div
+          id="error"
+          className="bg-rose-500 text-center text-slate-200 font-extrabold"
+        ></div>
         {loading && (
           <Image
             src="/assets/loading.svg"

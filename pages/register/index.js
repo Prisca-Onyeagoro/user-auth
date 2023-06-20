@@ -40,21 +40,29 @@ const Regsiter = () => {
       body: JSON.stringify(values),
     };
 
-    try {
-      // making a post request to the middleware handler /api/middleware/HttpHandler
-      const res = await fetch(
-        'http://localhost:3000/api/middleware/HttpHandler',
-        Options
-      );
-      if (res.ok) {
-        console.log('good');
-        console.log(res);
-      } else {
-        console.log('ERROR');
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // making a post request to the middleware handler /api/middleware/HttpHandler
+    const res = await fetch(
+      'http://localhost:3000/api/middleware/HttpHandler',
+      Options
+    )
+      .then((Response) => {
+        if (!Response.ok) {
+          return Response.json().then((data) => {
+            const ErrorMessage = data.message;
+            DisplayErrorMessage(ErrorMessage);
+          });
+        } else {
+          Router.push('/');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  function DisplayErrorMessage(ErrorMessage) {
+    const error = document.getElementById('error');
+    error.textContent = ErrorMessage;
   }
   useEffect(() => {
     const HandleChangeStart = () => {
@@ -93,7 +101,10 @@ const Regsiter = () => {
             Already have an account ? <Link href="/login">Sigin in</Link>
           </p>
         </div>
-
+        <div
+          id="error"
+          className="bg-rose-600 text-slate-300 font-extrabold text-center"
+        ></div>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4 p-14 ">
             {/* name */}
