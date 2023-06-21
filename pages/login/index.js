@@ -13,6 +13,7 @@ import { validateLogin } from '@/validate/validate';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
+import Github from '@/components/Github/Github';
 const Login = () => {
   const Router = useRouter();
   const [loading, isloading] = useState(false);
@@ -139,10 +140,13 @@ const Login = () => {
           <div className="flex justify-center mb-5">
             <button
               type="submit"
-              className=" w-72 bg-gradient-to-r from-slate-600 to-gray-500 p-2 font-extrabold rounded-xl m"
+              className=" w-72 items-center bg-gradient-to-r  from-slate-600 to-gray-500 p-2 font-extrabold rounded-xl m"
             >
               SignIn
             </button>
+          </div>
+          <div className="flex justify-center bg-gradient-to-r from-slate-600 to-gray-900 p-5 m-4">
+            <Github />
           </div>
         </form>
       </div>

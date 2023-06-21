@@ -2,10 +2,15 @@ import baseconn from '@/Database/baseconn';
 import Users from '@/Database/model/usermodel';
 import { compare } from 'bcryptjs';
 import NextAuth from 'next-auth/next';
+import GitHubProvider from 'next-auth/providers/github';
 import CredentialProvider from 'next-auth/providers/credentials';
 
 export default NextAuth({
   providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
     CredentialProvider({
       name: 'Credentials',
       async authorize(credentials, req) {
@@ -32,7 +37,4 @@ export default NextAuth({
       },
     }),
   ],
-  session: { strategy: 'jwt ' },
-  jwt: { secret: process.env.NEXT_AUTH_JWT_SECRET },
-  secret: process.env.NEXT_AUTH_SECRET,
 });
