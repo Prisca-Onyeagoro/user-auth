@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const baseconn = async () => {
   try {
-    const { connection } = await mongoose.connect(process.env.DATABASE_URL);
+    const { connection } = await mongoose.connect(process.env.database_url);
 
     if (connection.readyState === 1) {
       Promise.resolve(true);
