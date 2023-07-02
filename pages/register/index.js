@@ -41,7 +41,7 @@ const Regsiter = () => {
     };
 
     // making a post request to the middleware handler /api/middleware/HttpHandler
-    const res = await fetch(
+    const res = await axios.post(
       'http://localhost:3000/api/middleware/HttpHandler',
       Options
     )
